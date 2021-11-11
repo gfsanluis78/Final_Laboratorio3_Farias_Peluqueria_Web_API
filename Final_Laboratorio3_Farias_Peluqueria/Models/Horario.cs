@@ -10,7 +10,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
     public class Horario
     {
         [Key]
-        public string IdHorario { get; set; }
+        public int IdHorario { get; set; }
 
         public int BloqueId { get; set; }
 

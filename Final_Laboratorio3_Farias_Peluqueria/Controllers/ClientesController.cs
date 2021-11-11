@@ -1,4 +1,6 @@
 ﻿using Final_Laboratorio3_Farias_Peluqueria.Models;
+using Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones;
+using Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +30,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             this.contexto = contexto;
             this.configuration = configuration;
         }
-        
+
 
         // GET: api/<ClientesController>
         [HttpGet("GetAll")]
@@ -36,7 +38,8 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
         {
             try
             {
-                return Ok(await contexto.Clientes.ToListAsync());
+                var serviciosCliente = new ServicioClientes(new RepositorioClientes(contexto));
+                return Ok(await serviciosCliente.GetAll());
             }
             catch (Exception ex)
             {
@@ -48,10 +51,14 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
+            if (id == null)
+            {
+                return Ok("No existe id");
+            }
             try
             {
-                var entidad = await contexto.Clientes.SingleOrDefaultAsync(x => x.IdCliente == id);
-                return entidad != null ? Ok(entidad) : NotFound();
+                var serviciosCliente = new ServicioClientes(new RepositorioClientes(contexto));
+                return Ok(serviciosCliente.GetById(id));
             }
             catch (Exception ex)
             {
@@ -61,8 +68,26 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 
         // POST api/<ClientesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromForm] Cliente entidad)
         {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var serviciosCliente = new ServicioClientes(new RepositorioClientes(contexto));
+                    await serviciosCliente.Insert(entidad);
+
+                    return CreatedAtAction(nameof(Get), new { id = entidad.IdCliente }, entidad);
+                }
+                return BadRequest("Modelo invalido");
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+            
+           
         }
 
         // PUT api/<ClientesController>/5

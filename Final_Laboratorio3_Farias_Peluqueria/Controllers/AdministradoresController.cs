@@ -1,4 +1,6 @@
 ﻿using Final_Laboratorio3_Farias_Peluqueria.Models;
+using Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones;
+using Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -49,7 +51,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -62,14 +64,18 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             try
             {
-                var entidad = await dataContext.Administradores.SingleOrDefaultAsync(x => x.IdAdministrador == id);
-                return entidad != null ? Ok(entidad) : NotFound();
+                var servicioAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
+                return Ok(servicioAdministradores.GetById(id));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -79,7 +85,8 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
         {
             try
             {
-                return Ok(await dataContext.Administradores.ToListAsync());
+                var servicioAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
+                return Ok(await servicioAdministradores.GetAll());
             }
             catch (Exception ex)
             {
@@ -114,6 +121,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                     var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                     var claims = new List<Claim>
                     {
+                        new Claim("Id", a.IdAdministrador+""),
                         new Claim(ClaimTypes.Name, a.Email),
                         new Claim("FullName", a.Nombre + " " + a.Apellido),
                         new Claim(ClaimTypes.Role, "Administrador"),
@@ -136,7 +144,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -162,8 +170,9 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                     entidad.Password = hashed;
 
 
-                    await dataContext.Administradores.AddAsync(entidad);
-                    dataContext.SaveChanges();
+                    var serviciosAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
+                    await serviciosAdministradores.Insert(entidad);
+
                     return CreatedAtAction(nameof(Get), new { id = entidad.IdAdministrador }, entidad);
                 }
                 return BadRequest();
@@ -174,22 +183,21 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
         }
 
-        // POST api/<AdministradoresController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
         // PUT api/<AdministradoresController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Administrador entidad)
         {
+             var serviciosAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
+                await serviciosAdministradores.Update(entidad);
+            return Ok(entidad); 
         }
 
         // DELETE api/<AdministradoresController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async void Delete(int id)
         {
+            var serviciosAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
+            await serviciosAdministradores.Delete(id);
         }
     }
 }
