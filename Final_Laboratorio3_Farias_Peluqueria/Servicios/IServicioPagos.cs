@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Final_Laboratorio3_Farias_Peluqueria.Servicios
 {
-    public interface IServiciosPagos : IServicioBase<Pago>
+    public interface IServicioPagos : IServicioBase<Pago>
     {
     }
 }

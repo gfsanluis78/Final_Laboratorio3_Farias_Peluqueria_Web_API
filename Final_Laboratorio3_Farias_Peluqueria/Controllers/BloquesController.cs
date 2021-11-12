@@ -2,78 +2,68 @@
 using Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones;
 using Final_Laboratorio3_Farias_Peluqueria.Servicios;
 using Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]     // Aca aclaro que para autorizar revise lo tokens
     [ApiController]
-    public class ClientesController : ControllerBase
-
+    public class BloquesController : ControllerBase
     {
-        private readonly IServicioClientes servicioClientes;
+        private readonly IServicioBloques servicioBloques;
+                      
 
-        public ClientesController(IServicioClientes servicioClientes)
+        public BloquesController(IServicioBloques servicioBloques)
         {
-            this.servicioClientes = servicioClientes;
-        }
+            this.servicioBloques = servicioBloques;
+          }
 
-
-        // GET: api/<ClientesController>
+        // GET: api/Bloques/GetAll
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                return Ok(await servicioClientes.GetAll());
+                return Ok(await servicioBloques.GetAll());
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
-        // GET api/<ClientesController>/5
+        // GET api/Bloques/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             if (id == null)
             {
-                return Ok("No existe id");
+                return NotFound();
             }
             try
             {
-                return Ok(await servicioClientes.GetById(id));
+                return Ok(await servicioBloques.GetById(id));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
-        // POST api/<ClientesController>
+        // POST api/Bloques
         [HttpPost]
-        public async Task<IActionResult> Insert([FromForm] Cliente entidad)
+        public async Task<IActionResult> Insert([FromForm] Bloque entidad)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    await servicioClientes.Insert(entidad);
+                    await servicioBloques.Insert(entidad);
 
-                    return CreatedAtAction(nameof(Get), new { id = entidad.IdCliente }, entidad);
+                    return CreatedAtAction(nameof(Get), new { id = entidad.IdBloque }, entidad);
                 }
                 return BadRequest("Modelo invalido");
             }
@@ -82,25 +72,23 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 
                 return BadRequest(e.Message);
             }
-            
-           
         }
 
-        // PUT api/<ClientesController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Cliente entidad)
+        // PATCH api/Bloques/5
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Bloque entidad)
         {
-            await servicioClientes.Update(entidad);
+            await servicioBloques.Update(entidad);
             return Ok(entidad);
         }
 
-        // DELETE api/<EmpleadosController>/5
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await servicioClientes.Delete(id);
+                await servicioBloques.Delete(id);
                 return Ok();
             }
             catch (Exception e)

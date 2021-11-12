@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones
 {
-    public class ServicioPagos : ServicioBase<Pago>, IServiciosPagos
+    public class ServicioPagos : ServicioBase<Pago>, IServicioPagos
     {
         private IRepositorioPagos repositorioPagos;
 

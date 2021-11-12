@@ -1,4 +1,9 @@
-﻿using Final_Laboratorio3_Farias_Peluqueria.Models;
+﻿using Final_Laboratorio3_Farias_Peluqueria.Midlleware;
+using Final_Laboratorio3_Farias_Peluqueria.Models;
+using Final_Laboratorio3_Farias_Peluqueria.Repositorios;
+using Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones;
+using Final_Laboratorio3_Farias_Peluqueria.Servicios;
+using Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -41,8 +46,8 @@ namespace Final_Laboratorio3_Farias_Peluqueria
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { 
-                    Title = "Final Laboratorio3 - App Peluqueria Ariel", 
+                c.SwaggerDoc("v1", new OpenApiInfo {
+                    Title = "Final Laboratorio3 - App Peluqueria Ariel",
                     Version = "v1",
                     Description = "Web Api para App en Android. Trabajo Final de Laboratorio 3",
                     Contact = new OpenApiContact
@@ -50,11 +55,11 @@ namespace Final_Laboratorio3_Farias_Peluqueria
                         Name = "Genaro Farias",
                         Email = "gfsanluis78@gmail.com"
                     }
-                    });
+                });
                 // hace un archivo donde va aguardar los comentarios de los controladores
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath); 
+                c.IncludeXmlComments(xmlPath);
                 /* en cs.project tambien se pone la propiedad de grupo
                 < PropertyGroup >
                     < GenerateDocumentationFile > true </ GenerateDocumentationFile >
@@ -63,7 +68,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria
                 */
 
             });
-            // SOLO SI USA ENTITY FRAMEWORK:
+            // SOLO SI USA ENTITY FRAMEWORK:    //injeccion de dependecia contexto
             services.AddDbContext<DataContext>(
                 options => options.UseSqlServer(
                     configuration["ConnectionStrings:DefaultConnection"]
@@ -114,6 +119,19 @@ namespace Final_Laboratorio3_Farias_Peluqueria
             });
             services.AddMvc();
             services.AddSignalR();//añade signalR
+
+            // SOLO PARA INYECCIÓN DE DEPENDECIAS:
+            /*
+            Transient objects are always different; a new instance is provided to every controller and every service.
+            Scoped objects are the same within a request, but different across different requests.
+            Singleton objects are the same for every object and every request.
+            */
+            // services.AddTransient<IRepositorioBloques, RepositorioBloques>();
+            // repositorios
+
+            // Llamo a las referencias de interfaces
+            InversionControl.AddInterfaces(services);
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

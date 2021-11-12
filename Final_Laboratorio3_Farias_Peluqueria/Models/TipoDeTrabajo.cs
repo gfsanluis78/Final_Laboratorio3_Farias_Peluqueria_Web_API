@@ -9,7 +9,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
     public class TipoDeTrabajo
     {
         [Key]
-        public int IdTipoDeTreabajo { get; set; }
+        public int IdTipoDeTrabajo { get; set; }
 
         public string Nombre { get; set; }
 

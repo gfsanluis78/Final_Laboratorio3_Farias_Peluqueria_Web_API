@@ -1,5 +1,6 @@
 ﻿using Final_Laboratorio3_Farias_Peluqueria.Models;
 using Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones;
+using Final_Laboratorio3_Farias_Peluqueria.Servicios;
 using Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -24,13 +25,15 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
     [ApiController]
     public class AdministradoresController : ControllerBase
     {
+        private IServicioAdministradores servicioAdministradores;
         private readonly DataContext dataContext;
         private readonly IConfiguration iconfiguration;
 
-        public AdministradoresController(DataContext dataContext, IConfiguration configuration)
+        public AdministradoresController(IServicioAdministradores servicioAdministradores, DataContext dataContext, IConfiguration configuration)
         {
             this.dataContext = dataContext;
             this.iconfiguration = configuration;
+            this.servicioAdministradores = servicioAdministradores;
         }
 
         // GET: api/<AdministradoresController>
@@ -71,7 +74,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             try
             {
                 var servicioAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
-                return Ok(servicioAdministradores.GetById(id));
+                return Ok(await servicioAdministradores.GetById(id));
             }
             catch (Exception ex)
             {
@@ -187,17 +190,35 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Administrador entidad)
         {
-             var serviciosAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
+            try
+            {
+                var serviciosAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
                 await serviciosAdministradores.Update(entidad);
-            return Ok(entidad); 
+                return Ok(entidad);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+             
         }
 
-        // DELETE api/<AdministradoresController>/5
+        // DELETE api/<HorariosController>/5
         [HttpDelete("{id}")]
-        public async void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var serviciosAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
-            await serviciosAdministradores.Delete(id);
+            try
+            {
+                var serviciosAdministradores = new ServicioAdministradores(new RepositorioAdministradores(dataContext));
+                await serviciosAdministradores.Delete(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
+
     }
 }

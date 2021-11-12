@@ -12,13 +12,13 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
         [Key]
         public int IdHorario { get; set; }
 
-        public int BloqueId { get; set; }
+        public int IdBloque { get; set; }
 
         public DateTime Fecha { get; set; }
 
         public string notas { get; set; }
 
-        [ForeignKey(nameof(BloqueId))]
+        [ForeignKey(nameof(IdBloque))]
         public Bloque Bloque { get; set; }
     }
 }
