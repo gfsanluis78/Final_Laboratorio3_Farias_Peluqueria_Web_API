@@ -40,6 +40,20 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
         }
 
+        // POST: api/Empleados/GetAllByTipo
+        [HttpPost("GetAllByTipo")]
+        public async Task<IActionResult> GetAllByTipo([FromBody] TipoDeTrabajo t)
+        {
+            try
+            {
+                return Ok(await servicioEmpleados.GetEmpleadosByTipoTrabajo(t.IdTipoDeTrabajo));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         // GET api/Empleados/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
