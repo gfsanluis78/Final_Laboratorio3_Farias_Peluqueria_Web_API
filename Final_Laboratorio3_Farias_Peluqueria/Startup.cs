@@ -149,6 +149,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria
                 });
 
             }
+            app.UseDeveloperExceptionPage();
 
             //Habilitar CORS
             app.UseCors(x => x

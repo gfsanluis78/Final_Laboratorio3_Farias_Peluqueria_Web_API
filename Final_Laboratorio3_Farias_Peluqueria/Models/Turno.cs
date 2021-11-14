@@ -20,7 +20,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
 
         public int IdCliente { get; set; }
 
-        public string Costo { get; set; }
+        public int IdPago { get; set; }
 
         public string Notas { get; set; }
 
@@ -37,6 +37,9 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
 
         [ForeignKey(nameof(IdCliente))]
         public Cliente Cliente { get; set; }
+
+        [ForeignKey(nameof(IdPago))]
+        public Pago Pago { get; set; }
 
 
 

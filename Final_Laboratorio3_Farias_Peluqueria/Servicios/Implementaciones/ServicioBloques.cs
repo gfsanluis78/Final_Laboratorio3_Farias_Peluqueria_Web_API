@@ -15,5 +15,10 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones
         {
             this.repositorioBloques = repositorioBloques;
         }
+
+        public async Task<List<Bloque>> GetAllByHorarioByEmpleado(ConsultaHorarios entidad)
+        {
+            return await repositorioBloques.GetAllByHorarioByEmpleado(entidad);
+        }
     }
 }

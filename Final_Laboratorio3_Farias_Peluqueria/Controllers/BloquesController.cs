@@ -96,5 +96,19 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        // POST api/Bloques/
+        [HttpPost("GetAllByHorarioByEmpleado")]
+        public async Task<IActionResult> GetAllByHorarioByEmpleado([FromBody] ConsultaHorarios entidad)
+        {
+            try
+            {
+                return Ok(await servicioBloques.GetAllByHorarioByEmpleado(entidad));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

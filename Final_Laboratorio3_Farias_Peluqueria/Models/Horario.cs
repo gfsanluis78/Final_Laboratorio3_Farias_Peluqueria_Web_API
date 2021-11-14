@@ -14,7 +14,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
 
         public int IdBloque { get; set; }
 
-        public DateTime Fecha { get; set; }
+        public string Fecha { get; set; }
 
         public string notas { get; set; }
 
