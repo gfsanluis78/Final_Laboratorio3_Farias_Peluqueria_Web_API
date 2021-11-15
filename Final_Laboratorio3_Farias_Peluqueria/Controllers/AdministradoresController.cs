@@ -220,5 +220,47 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
         }
 
+        // PUT api/Administradores/Editar				// Ok
+        [HttpPatch("Editar")]
+        public async Task<IActionResult> Editar([FromBody] Administrador entidad)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var usuario = User.Identity.Name;
+
+                    if (usuario != entidad.Email)
+                    {
+                        return BadRequest(new { Error = "No es el mismo usuario" });
+                    }
+
+                    Administrador original = await dataContext.Administradores.AsNoTracking().SingleOrDefaultAsync(p => p.IdAdministrador == entidad.IdAdministrador);
+
+                    if (String.IsNullOrEmpty(entidad.Password))
+                    {
+                        entidad.Password = original.Password;
+                    }
+                    else
+                    {
+                        entidad.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                            password: entidad.Password,
+                            salt: System.Text.Encoding.ASCII.GetBytes(iconfiguration["Salt"]),
+                            prf: KeyDerivationPrf.HMACSHA1,
+                            iterationCount: 1000,
+                            numBytesRequested: 256 / 8));
+                    }
+                    dataContext.Administradores.Update(entidad);
+                    await dataContext.SaveChangesAsync();
+                    return Ok(entidad);
+                }
+                return BadRequest(new { Error = "Modelo invalido" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
