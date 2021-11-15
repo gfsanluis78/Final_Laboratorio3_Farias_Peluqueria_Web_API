@@ -8,5 +8,8 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Servicios
 {
     public interface IServicioTurnos : IServicioBase<Turno>
     {
+        Task<List<Turno>> GetAllFull();
+
+        Task<List<Turno>> GetAllFullByFecha(ConsultaHorarios entidad);
     }
 }

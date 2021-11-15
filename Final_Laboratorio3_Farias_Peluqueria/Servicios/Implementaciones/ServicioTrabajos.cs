@@ -15,5 +15,10 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones
         {
             this.repositorioTrabajos = repositorioTrabajos;
         }
+
+        public async Task<List<Trabajo>> GetAllByTipoTrabajoByEmpleado(ConsultaByTipoTrabajo entidad)
+        {
+            return await repositorioTrabajos.GetAllByTipoTrabajoByEmpleado(entidad);
+        }
     }
 }

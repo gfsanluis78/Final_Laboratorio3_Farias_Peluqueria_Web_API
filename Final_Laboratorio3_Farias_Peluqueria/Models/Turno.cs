@@ -12,7 +12,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
         [Key]
         public int IdTurno { get; set; }
 
-        public int IdHorario { get; set; }
+        public int IdBloque { get; set; }
 
         public int IdEstado { get; set; }
 
@@ -20,14 +20,16 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
 
         public int IdCliente { get; set; }
 
-        public int IdPago { get; set; }
-
         public string Notas { get; set; }
+
+        public string Fecha { get; set; }
+
+        public string Costo { get; set; }
 
         public string FechaCreacion { get; set; }
 
-        [ForeignKey(nameof(IdHorario))]
-        public Horario Horario { get; set; }
+        [ForeignKey(nameof(IdBloque))]
+        public Bloque Bloque { get; set; }
 
         [ForeignKey(nameof(IdEstado))]
         public Estado Estado { get; set; }
@@ -37,13 +39,6 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
 
         [ForeignKey(nameof(IdCliente))]
         public Cliente Cliente { get; set; }
-
-        [ForeignKey(nameof(IdPago))]
-        public Pago Pago { get; set; }
-
-
-
-
 
 
     }

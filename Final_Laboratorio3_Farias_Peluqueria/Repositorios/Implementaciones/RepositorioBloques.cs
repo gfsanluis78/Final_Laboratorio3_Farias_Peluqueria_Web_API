@@ -19,11 +19,11 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones
         public async Task<List<Bloque>> GetAllByHorarioByEmpleado(ConsultaHorarios entidad)
         {
             var lista = await contexto.Turnos
-                .Include(x => x.Horario.Bloque)
+                .Include(x => x.Bloque)
                 .Include(x => x.Trabajo)
                 .ThenInclude(x => x.Empleado)
-                .Where(x => x.Trabajo.Empleado.IdEmpleado == entidad.IdEmpleado && x.Horario.Fecha == entidad.Fecha)
-                .Select(x => x.Horario.Bloque)
+                .Where(x => x.Trabajo.Empleado.IdEmpleado == entidad.IdEmpleado && x.Fecha == entidad.Fecha)
+                .Select(x => x.Bloque)
                 .ToListAsync();
 
             return lista;

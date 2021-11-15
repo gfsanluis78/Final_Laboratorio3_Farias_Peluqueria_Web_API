@@ -36,6 +36,34 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
         }
 
+        // GET: api/Turnos/GetAllFull
+        [HttpGet("GetAllFull")]
+        public async Task<IActionResult> GetAllFull()
+        {
+            try
+            {
+                return Ok(await servicioTurnos.GetAllFull());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Post: api/Turnos/GetAllFullByFecha
+        [HttpPost("GetAllFullByFecha")]
+        public async Task<IActionResult> GetAllFullByFecha([FromBody] ConsultaHorarios entidad)
+        {
+            try
+            {
+                return Ok(await servicioTurnos.GetAllFullByFecha(entidad));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         // GET api/Turnos/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
@@ -56,7 +84,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 
         // POST api/Turnos
         [HttpPost]
-        public async Task<IActionResult> Insert([FromForm] Turno entidad)
+        public async Task<IActionResult> Insert([FromBody] Turno entidad)
         {
             try
             {
