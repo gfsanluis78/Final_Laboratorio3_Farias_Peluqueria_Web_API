@@ -25,5 +25,15 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones
         {
             return await repositorioTurnos.GetAllFullByFecha(entidad);
         }
+
+        public async Task<List<Turno>> GetTurnosByCliente(Cliente cliente)
+        {
+            return await repositorioTurnos.GetTurnosByCliente(cliente);
+        }
+
+        public async Task<Turno> GetUltimoByCliente(Cliente cliente)
+        {
+            return await repositorioTurnos.GetUltimoByCliente(cliente);
+        }
     }
 }

@@ -50,6 +50,35 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
         }
 
+        // Post: api/Turnos/GetUltimoByCliente
+        [HttpPost("GetUltimoByCliente")]
+        public async Task<IActionResult> GetUltimoByCliente([FromBody] Cliente entidad)
+        {
+            try
+            {
+                return Ok(await servicioTurnos.GetUltimoByCliente(entidad));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Post: api/Turnos/GetTurnosByCliente
+        [HttpPost("GetTurnosByCliente")]
+        public async Task<IActionResult> GetTurnosByCliente([FromBody] Cliente entidad)
+        {
+            try
+            {
+                return Ok(await servicioTurnos.GetTurnosByCliente(entidad));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         // Post: api/Turnos/GetAllFullByFecha
         [HttpPost("GetAllFullByFecha")]
         public async Task<IActionResult> GetAllFullByFecha([FromBody] ConsultaHorarios entidad)
