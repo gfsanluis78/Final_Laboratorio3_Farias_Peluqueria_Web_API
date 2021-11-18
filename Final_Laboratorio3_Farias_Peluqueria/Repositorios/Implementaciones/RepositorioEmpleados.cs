@@ -16,6 +16,17 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones
 
         }
 
+        public async Task<List<Empleado>> GetAllByTipoTrabajo(TipoDeTrabajo tipoDeTrabajo)
+        {
+            var lista = await contexto.Trabajos
+               .Include(x=>x.Empleado)
+               .Where(x => x.IdTipoDeTrabajo == tipoDeTrabajo.IdTipoDeTrabajo)
+               .Select(x => x.Empleado)
+               .ToListAsync();
+
+            return lista;
+        }
+
         public async Task<List<Empleado>> GetEmpleadosByTipoTrabajo(int id)
         {
             var lista = await contexto.Trabajos

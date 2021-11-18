@@ -9,5 +9,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Servicios
     public interface IServicioEmpleados : IServicioBase<Empleado>
     {
         Task<List<Empleado>> GetEmpleadosByTipoTrabajo(int id);
+        
+        Task<List<Empleado>> GetAllByTipoTrabajo(TipoDeTrabajo tipoDeTrabajo);
     }
 }

@@ -8,5 +8,6 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Repositorios
 {
     public interface IRepositorioTipoDeTrabajos : IRepositorioBase<TipoDeTrabajo>
     {
+        Task<List<TipoDeTrabajo>> GetAllByEmpleado(Empleado empleado);
     }
 }

@@ -8,5 +8,6 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Servicios
 {
     public interface IServicioClientes : IServicioBase<Cliente>
     {
+     
     }
 }
