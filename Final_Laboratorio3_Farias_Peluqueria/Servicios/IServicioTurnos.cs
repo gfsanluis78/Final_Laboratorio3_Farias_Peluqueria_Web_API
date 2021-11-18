@@ -1,4 +1,5 @@
 ﻿using Final_Laboratorio3_Farias_Peluqueria.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Servicios
         Task<List<Turno>> GetTurnosByCliente(Cliente cliente);
 
         Task<int> GetCantidadByEmpleado(Empleado empleado);
+
+        //Task<IAsyncResult> GetTurnosAndEmpleado();
     }
 }

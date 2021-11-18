@@ -5,20 +5,26 @@ using System.Threading.Tasks;
 
 namespace Final_Laboratorio3_Farias_Peluqueria.Models
 {
-    public class CanntidadTurnos
+    public class CantidadTurnos
     {
-        private object cantidad;
+        private int cantidad;
+        private String empleado;
 
-        public CanntidadTurnos(object cantidad)
+        public CantidadTurnos(String empleado, int cantidad)
         {
             this.cantidad = cantidad;
+            this.empleado = empleado;
         }
 
-        CanntidadTurnos(int cantidad)
+        CantidadTurnos(int cantidad)
         {
             this.Cantidad = cantidad;
         }
 
+        String Empleado { get; set; }
+
         int Cantidad { get; set; }
+
+
     }
 }

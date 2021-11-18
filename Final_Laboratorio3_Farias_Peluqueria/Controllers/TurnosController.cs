@@ -4,6 +4,7 @@ using Final_Laboratorio3_Farias_Peluqueria.Servicios;
 using Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,11 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
     public class TurnosController : ControllerBase
     {
         private IServicioTurnos servicioTurnos;
-        public TurnosController(IServicioTurnos servicioTurnos)
+        private DataContext contexto;
+        public TurnosController(IServicioTurnos servicioTurnos, DataContext context)
         {
             this.servicioTurnos = servicioTurnos;
+            this.contexto = context;
         }
 
         // GET: api/Turnos/GetAll
@@ -35,6 +38,29 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // GetTurnosAndEmpleado
+        // GET: api/Turnos/GetAll
+        [HttpGet("GetTurnosAndEmpleado")]
+        public async Task<IActionResult> GetTurnosAndEmpleado()
+        {
+            try
+            {
+                var resultado = await contexto.Turnos
+                    .Include(t => t.Trabajo.Empleado)
+                    .GroupBy(x => new { x.Trabajo.Empleado.Apellido, x.Trabajo.Empleado.IdEmpleado })
+                    .Select(x=> new {Empleado = x.Key, Cantidad = x.Count()})
+                    .ToListAsync();
+
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
 
         // GET: api/Turnos/GetAllFull
         [HttpGet("GetAllFull")]
