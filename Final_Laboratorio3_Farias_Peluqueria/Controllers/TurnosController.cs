@@ -93,6 +93,21 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
         }
 
+
+        // Post: api/Turnos/GetCantidadByEmpleado
+        [HttpPost("GetCantidadByEmpleado")]
+        public async Task<IActionResult> GetCantidadByEmpleado([FromBody] Empleado entidad)
+        {
+            try
+            {
+                return Ok(await servicioTurnos.GetCantidadByEmpleado(entidad));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         // GET api/Turnos/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)

@@ -46,6 +46,13 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones
             return lista;
         }
 
+        public async Task<int> GetCantidadByEmpleado(Empleado empleado)
+        {
+            var cantidad = contexto.Turnos.Count(t => t.Trabajo.Empleado.IdEmpleado == empleado.IdEmpleado);
+                
+            return cantidad;
+        }
+
         public async Task<List<Turno>> GetTurnosByCliente(Cliente cliente)
         {
             var turnos = await contexto.Turnos
