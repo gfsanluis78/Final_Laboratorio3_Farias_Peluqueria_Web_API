@@ -26,5 +26,15 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones
 
             return lista;
         }
+
+        public async Task<List<Trabajo>> GetAllFull()
+        {
+            var lista = await contexto.Trabajos
+              .Include(x => x.Empleado)
+              .Include(x => x.TipoDeTrabajo)
+              .ToListAsync();
+
+            return lista;
+        }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 
 namespace Final_Laboratorio3_Farias_Peluqueria.Models
 {
@@ -53,8 +55,12 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
 
         public string Especialidad { get; set; }
 
-
+       
         public string Avatar { get; set; }
+
+        // [Required(ErrorMessage = "Es requerido el Avatar file.")]
+        [NotMapped]//Para EF
+        public IFormFile AvatarFile { get; set; }
 
         public string GetNombreCompleto()
         {

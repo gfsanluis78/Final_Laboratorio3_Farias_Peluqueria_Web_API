@@ -31,8 +31,8 @@
     <Folder Include="Data\" />
     <Folder Include="wwwroot\Empleados\" />
     <Folder Include="wwwroot\NewFolder1\" />
+    <Folder Include="wwwroot\NewFolder2\" />
     <Folder Include="wwwroot\Trabajos\" />
-    <Folder Include="wwwroot\NewFolder\" />
   </ItemGroup>
 
 </Project>

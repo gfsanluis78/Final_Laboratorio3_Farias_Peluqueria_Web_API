@@ -104,6 +104,10 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
         {
             try
             {
+                if (usuario == null || clave == null)
+                {
+                    return BadRequest("Nombre de usuario o clave no pueden ser null");
+                }
                 string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                     password: clave,
                     salt: System.Text.Encoding.ASCII.GetBytes(iconfiguration["Salt"]),
@@ -139,6 +143,66 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                     );
 
                     var rta =  new LoginRetrofit ( 
+                        new JwtSecurityTokenHandler().WriteToken(token)
+                        );
+
+                    return Ok(rta);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POST api/<controller>/loginweb					// Ok
+        [HttpPost("loginweb")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Loginweb([FromBody] Administrador entidad)
+        {
+            try
+            {
+                if (entidad.Email == null || entidad.Password == null)
+                {
+                    return BadRequest("Nombre de usuario o clave no pueden ser null");
+                }
+                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: entidad.Password,
+                    salt: System.Text.Encoding.ASCII.GetBytes(iconfiguration["Salt"]),
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 1000,
+                    numBytesRequested: 256 / 8));
+                var a = await dataContext.Administradores.FirstOrDefaultAsync(x => x.Email == entidad.Email);
+                if (a == null || a.Password != hashed)
+                {
+                    return BadRequest("Nombre de usuario o clave incorrecta");
+                }
+                else
+                {
+                    // Para el json w token
+
+                    var key = new SymmetricSecurityKey(
+                        System.Text.Encoding.ASCII.GetBytes(iconfiguration["TokenAuthentication:SecretKey"]));
+                    var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                    var claims = new List<Claim>
+                    {
+                        new Claim("Id", a.IdAdministrador+""),
+                        new Claim(ClaimTypes.Name, a.Email),
+                        new Claim("FullName", a.Nombre + " " + a.Apellido),
+                        new Claim(ClaimTypes.Role, "Administrador"),
+                   
+                    };
+
+                    var token = new JwtSecurityToken(
+                        issuer: iconfiguration["TokenAuthentication:Issuer"],
+                        audience: iconfiguration["TokenAuthentication:Audience"],
+                        claims: claims,
+                        expires: DateTime.Now.AddYears(1),
+                        signingCredentials: credenciales
+                    );
+
+
+                    var rta = new LoginWeb( 5001,
                         new JwtSecurityTokenHandler().WriteToken(token)
                         );
 

@@ -122,5 +122,19 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
         }
 
+        // GET: api/Trabajos/GetAllFull
+        [HttpGet("GetAllFull")]
+        public async Task<IActionResult> GetAllFull()
+        {
+            try
+            {
+                return Ok(await servicioTrabajos.GetAllFull());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

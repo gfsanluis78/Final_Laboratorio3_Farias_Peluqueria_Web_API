@@ -20,5 +20,9 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones
         {
             return await repositorioTrabajos.GetAllByTipoTrabajoByEmpleado(entidad);
         }
+        public async Task<List<Trabajo>> GetAllFull()
+        {
+            return await repositorioTrabajos.GetAllFull();
+        }
     }
 }

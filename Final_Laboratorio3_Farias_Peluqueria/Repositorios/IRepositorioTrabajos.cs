@@ -9,5 +9,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Repositorios
     public interface IRepositorioTrabajos : IRepositorioBase<Trabajo>
     {
         Task<List<Trabajo>> GetAllByTipoTrabajoByEmpleado(ConsultaByTipoTrabajo entidad);
+        Task<List<Trabajo>> GetAllFull();
+
     }
 }
