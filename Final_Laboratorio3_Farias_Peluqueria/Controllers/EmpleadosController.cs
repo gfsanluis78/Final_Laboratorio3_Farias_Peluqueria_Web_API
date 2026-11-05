@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Mail;
 
 namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 {
@@ -129,7 +130,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 
         // PUT api/Empleados/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromForm] Empleado entidad)
+        /*public async Task<IActionResult> Update(int id, [FromForm] Empleado entidad)
         {
             try
             {
@@ -146,10 +147,44 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             {
                 return BadRequest("El error es" + e.Message);
             }
-        }
+        }*/
 
-        // DELETE api/<EmpleadosController>/5
-        [HttpDelete("{id}")]
+       
+
+public async Task<IActionResult> Update(int id, [FromForm] Empleado entidad)
+    {
+        try
+        {
+            // ✅ Validación de email
+            try
+            {
+                var addr = new MailAddress(entidad.Email);
+                if (addr.Address != entidad.Email.Trim())
+                    return BadRequest("El email no tiene un formato válido.");
+            }
+            catch
+            {
+                return BadRequest("El email no tiene un formato válido.");
+            }
+
+            if (entidad.AvatarFile != null)
+            {
+                Empleado conAvatarNuevo = RecibeAvatar(entidad);
+                await servicioEmpleados.Update(conAvatarNuevo);
+                return Ok(entidad);
+            }
+
+            await servicioEmpleados.Update(entidad);
+            return Ok(entidad);
+        }
+        catch (Exception e)
+        {
+            return BadRequest("El error es " + e.Message);
+        }
+    }
+
+    // DELETE api/<EmpleadosController>/5
+    [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

@@ -132,6 +132,11 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                         new Claim(ClaimTypes.Name, a.Email),
                         new Claim("FullName", a.Nombre + " " + a.Apellido),
                         new Claim(ClaimTypes.Role, "Administrador"),
+                        new Claim("Avatar", a.Avatar),
+                        new Claim("DNI", a.Dni),
+                        new Claim("Telefono", a.Telefono),
+                        new Claim("Nombre", a.Nombre),
+                        new Claim("Apellido", a.Apellido)
                     };
 
                     var token = new JwtSecurityToken(
@@ -184,13 +189,30 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                     var key = new SymmetricSecurityKey(
                         System.Text.Encoding.ASCII.GetBytes(iconfiguration["TokenAuthentication:SecretKey"]));
                     var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                    // Extraer iniciales
+                    string iniciales = "";
+                    if (!string.IsNullOrEmpty(a.Nombre) && !string.IsNullOrEmpty(a.Apellido))
+                    {
+                        iniciales = $"{a.Nombre[0]}{a.Apellido[0]}".ToUpper(); // Obtener la primera letra de nombre y apellido
+                    }
+
                     var claims = new List<Claim>
                     {
-                        new Claim("Id", a.IdAdministrador+""),
+                        new Claim("id", a.IdAdministrador+""),
                         new Claim(ClaimTypes.Name, a.Email),
-                        new Claim("FullName", a.Nombre + " " + a.Apellido),
+                        new Claim("fullName", a.Nombre + " " + a.Apellido),
                         new Claim(ClaimTypes.Role, "Administrador"),
-                   
+                        new Claim("avatar", a.Avatar),
+                        new Claim("dni", a.Dni),
+                        new Claim("telefono", a.Telefono),
+                        new Claim("nombre", a.Nombre),
+                        new Claim("apellido", a.Apellido),
+                        new Claim("rol", "5001"),
+                        new Claim("iniciales", iniciales),
+
+
+
                     };
 
                     var token = new JwtSecurityToken(
@@ -202,9 +224,11 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                     );
 
 
-                    var rta = new LoginWeb( 5001,
-                        new JwtSecurityTokenHandler().WriteToken(token)
-                        );
+                    //var rta = new LoginWeb( 5001,
+                    //    new JwtSecurityTokenHandler().WriteToken(token)
+                    //    );
+
+                    var rta = new JwtSecurityTokenHandler().WriteToken(token);
 
                     return Ok(rta);
                 }

@@ -47,9 +47,9 @@ namespace Final_Laboratorio3_Farias_Peluqueria
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {
-                    Title = "Final Laboratorio3 - App Peluqueria Ariel",
+                    Title = "Final Integrador - App Peluqueria Ariel",
                     Version = "v1",
-                    Description = "Web Api para App en Android. Trabajo Final de Laboratorio 3",
+                    Description = "Web Api para App en Android. Trabajo Final",
                     Contact = new OpenApiContact
                     {
                         Name = "Genaro Farias",
