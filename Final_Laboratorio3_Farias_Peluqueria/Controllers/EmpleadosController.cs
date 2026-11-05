@@ -134,14 +134,35 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
         {
             try
             {
+                // Se parte del empleado guardado para no pisar datos que no vienen en el formulario.
+                Empleado actual = await servicioEmpleados.GetById(id);
+                if (actual == null)
+                {
+                    return NotFound("No existe el empleado");
+                }
+
+                actual.Nombre = entidad.Nombre;
+                actual.Apellido = entidad.Apellido;
+                actual.Dni = entidad.Dni;
+                actual.Telefono = entidad.Telefono;
+                actual.Email = entidad.Email;
+                actual.Especialidad = entidad.Especialidad;
+
+                // La contraseña solo cambia si se envía una nueva, y se guarda hasheada
+                // (antes se guardaba tal cual llegaba, o sea en texto plano).
+                if (!string.IsNullOrWhiteSpace(entidad.Password))
+                {
+                    actual.Password = HasheoPassword(entidad);
+                }
+
                 if (entidad.AvatarFile != null)
                 {
-                    Empleado conAvatarNuevo = RecibeAvatar(entidad);
-                    await servicioEmpleados.Update(conAvatarNuevo);
-                    return Ok(entidad);
+                    entidad.IdEmpleado = actual.IdEmpleado;
+                    actual.Avatar = RecibeAvatar(entidad).Avatar;
                 }
-                await servicioEmpleados.Update(entidad);
-                return Ok(entidad);
+
+                await servicioEmpleados.Update(actual);
+                return Ok(actual);
             }
             catch (Exception e)
             {
