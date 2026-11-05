@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 
 namespace Final_Laboratorio3_Farias_Peluqueria.Models
 {
@@ -51,6 +52,7 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Models
         //[Required(ErrorMessage = "Este campo es requerido.")]
         //[StringLength(60, ErrorMessage = "Longitud entre 6 y 15 caracteres.", MinimumLength = 6)]
         [DataType(DataType.Password)]
+        [JsonIgnore] // No se devuelve el hash en las respuestas JSON de la API
         public string Password { get; set; }
 
         public string Especialidad { get; set; }
