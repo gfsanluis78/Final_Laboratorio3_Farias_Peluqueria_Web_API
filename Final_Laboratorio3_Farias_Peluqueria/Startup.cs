@@ -60,6 +60,28 @@ namespace Final_Laboratorio3_Farias_Peluqueria
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
+
+                // Botón "Authorize" en Swagger para probar los endpoints que piden token:
+                // se pega el token que devuelve Administradores/loginweb (sin "Bearer ").
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Token JWT que devuelve el login",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                        },
+                        new string[] { }
+                    }
+                });
                 /* en cs.project tambien se pone la propiedad de grupo
                 < PropertyGroup >
                     < GenerateDocumentationFile > true </ GenerateDocumentationFile >

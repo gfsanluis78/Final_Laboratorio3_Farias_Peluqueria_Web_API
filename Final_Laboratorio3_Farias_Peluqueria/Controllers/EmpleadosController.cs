@@ -1,4 +1,6 @@
 ﻿using Final_Laboratorio3_Farias_Peluqueria.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones;
 using Final_Laboratorio3_Farias_Peluqueria.Servicios;
 using Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones;
@@ -18,6 +20,7 @@ using System.Net.Mail;
 namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] // Requiere el token JWT
     [ApiController]
     public class EmpleadosController : ControllerBase
     {

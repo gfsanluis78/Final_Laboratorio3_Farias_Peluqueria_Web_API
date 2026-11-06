@@ -1,4 +1,6 @@
 ﻿using Final_Laboratorio3_Farias_Peluqueria.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones;
 using Final_Laboratorio3_Farias_Peluqueria.Servicios;
 using Final_Laboratorio3_Farias_Peluqueria.Servicios.Implementaciones;
@@ -14,6 +16,7 @@ using System.Threading.Tasks;
 namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] // Requiere el token JWT
     [ApiController]
     public class TurnosController : ControllerBase
     {
@@ -160,6 +163,10 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (await HorarioOcupado(entidad, 0))
+                    {
+                        return Conflict("El empleado ya tiene un turno en esa fecha y horario.");
+                    }
                     await servicioTurnos.Insert(entidad);
 
                     return CreatedAtAction(nameof(Get), new { id = entidad.IdTurno }, entidad);
@@ -176,8 +183,36 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Turno entidad)
         {
-            await servicioTurnos.Update(entidad);
-            return Ok(entidad);
+            try
+            {
+                if (await HorarioOcupado(entidad, id))
+                {
+                    return Conflict("El empleado ya tiene un turno en esa fecha y horario.");
+                }
+                await servicioTurnos.Update(entidad);
+                return Ok(entidad);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // true si el empleado del trabajo ya tiene otro turno en la misma fecha y bloque.
+        // Es la misma regla que usa la app Android para mostrar los horarios libres
+        // (Bloques/GetAllByHorarioByEmpleado): cualquier turno existente ocupa el horario.
+        private async Task<bool> HorarioOcupado(Turno entidad, int idTurnoActual)
+        {
+            int idEmpleado = await contexto.Trabajos
+                .Where(t => t.IdTrabajo == entidad.IdTrabajo)
+                .Select(t => t.IdEmpleado)
+                .FirstOrDefaultAsync();
+
+            return await contexto.Turnos.AnyAsync(t =>
+                t.IdTurno != idTurnoActual &&
+                t.Fecha == entidad.Fecha &&
+                t.IdBloque == entidad.IdBloque &&
+                t.Trabajo.IdEmpleado == idEmpleado);
         }
 
         // DELETE api/<TurnosController>/5
