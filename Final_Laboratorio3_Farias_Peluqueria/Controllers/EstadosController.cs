@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
 
+
 namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 {
     [Route("api/[controller]")]

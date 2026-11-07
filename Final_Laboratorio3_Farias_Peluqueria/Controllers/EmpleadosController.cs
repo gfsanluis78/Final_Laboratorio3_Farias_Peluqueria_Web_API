@@ -133,10 +133,22 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
 
         // PUT api/Empleados/5
         [HttpPut("{id}")]
-        /*public async Task<IActionResult> Update(int id, [FromForm] Empleado entidad)
+        public async Task<IActionResult> Update(int id, [FromForm] Empleado entidad)
         {
             try
             {
+                // Validación de email
+                try
+                {
+                    var addr = new MailAddress(entidad.Email);
+                    if (addr.Address != entidad.Email.Trim())
+                        return BadRequest("El email no tiene un formato válido.");
+                }
+                catch
+                {
+                    return BadRequest("El email no tiene un formato válido.");
+                }
+
                 // Se parte del empleado guardado para no pisar datos que no vienen en el formulario.
                 Empleado actual = await servicioEmpleados.GetById(id);
                 if (actual == null)
@@ -151,8 +163,8 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                 actual.Email = entidad.Email;
                 actual.Especialidad = entidad.Especialidad;
 
-                // La contraseña solo cambia si se envía una nueva, y se guarda hasheada
-                // (antes se guardaba tal cual llegaba, o sea en texto plano).
+                // La contraseña solo cambia si se envía una nueva, y se guarda hasheada.
+                // Si viene vacía (la web la deja vacía al editar), se mantiene la actual.
                 if (!string.IsNullOrWhiteSpace(entidad.Password))
                 {
                     actual.Password = HasheoPassword(entidad);
@@ -169,46 +181,12 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("El error es" + e.Message);
+                return BadRequest("El error es " + e.Message);
             }
-        }*/
-
-       
-
-public async Task<IActionResult> Update(int id, [FromForm] Empleado entidad)
-    {
-        try
-        {
-            // ✅ Validación de email
-            try
-            {
-                var addr = new MailAddress(entidad.Email);
-                if (addr.Address != entidad.Email.Trim())
-                    return BadRequest("El email no tiene un formato válido.");
-            }
-            catch
-            {
-                return BadRequest("El email no tiene un formato válido.");
-            }
-
-            if (entidad.AvatarFile != null)
-            {
-                Empleado conAvatarNuevo = RecibeAvatar(entidad);
-                await servicioEmpleados.Update(conAvatarNuevo);
-                return Ok(entidad);
-            }
-
-            await servicioEmpleados.Update(entidad);
-            return Ok(entidad);
         }
-        catch (Exception e)
-        {
-            return BadRequest("El error es " + e.Message);
-        }
-    }
 
-    // DELETE api/<EmpleadosController>/5
-    [HttpDelete("{id}")]
+        // DELETE api/<EmpleadosController>/5
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
