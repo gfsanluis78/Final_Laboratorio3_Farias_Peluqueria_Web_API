@@ -22,7 +22,9 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Repositorios.Implementaciones
                 .Include(x => x.Bloque)
                 .Include(x => x.Trabajo)
                 .ThenInclude(x => x.Empleado)
-                .Where(x => x.Trabajo.Empleado.IdEmpleado == entidad.IdEmpleado && x.Fecha == entidad.Fecha)
+                // Horarios ocupados del empleado en esa fecha (los turnos cancelados no ocupan).
+                .Where(x => x.Trabajo.Empleado.IdEmpleado == entidad.IdEmpleado && x.Fecha == entidad.Fecha
+                    && x.Estado.Nombre != "Cancelado")
                 .Select(x => x.Bloque)
                 .ToListAsync();
 

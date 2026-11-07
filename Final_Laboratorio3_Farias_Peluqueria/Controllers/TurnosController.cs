@@ -201,8 +201,17 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
         // true si el empleado del trabajo ya tiene otro turno en la misma fecha y bloque.
         // Es la misma regla que usa la app Android para mostrar los horarios libres
         // (Bloques/GetAllByHorarioByEmpleado): cualquier turno existente ocupa el horario.
+        // Los turnos con estado "Cancelado" no ocupan el horario.
         private async Task<bool> HorarioOcupado(Turno entidad, int idTurnoActual)
         {
+            // Un turno que se guarda como cancelado no ocupa nada.
+            bool esCancelado = await contexto.Estados
+                .AnyAsync(e => e.IdEstado == entidad.IdEstado && e.Nombre == "Cancelado");
+            if (esCancelado)
+            {
+                return false;
+            }
+
             int idEmpleado = await contexto.Trabajos
                 .Where(t => t.IdTrabajo == entidad.IdTrabajo)
                 .Select(t => t.IdEmpleado)
@@ -212,7 +221,8 @@ namespace Final_Laboratorio3_Farias_Peluqueria.Controllers
                 t.IdTurno != idTurnoActual &&
                 t.Fecha == entidad.Fecha &&
                 t.IdBloque == entidad.IdBloque &&
-                t.Trabajo.IdEmpleado == idEmpleado);
+                t.Trabajo.IdEmpleado == idEmpleado &&
+                t.Estado.Nombre != "Cancelado");
         }
 
         // DELETE api/<TurnosController>/5
